@@ -1,0 +1,99 @@
+--Individual Project Outline 
+
+Project Breakdown: School Dismissal Database
+1. Logical Model Design
+The logical model represents entities and their relationships at a high level. We'll include:
+
+Students
+
+Student ID (Primary Key)
+First Name
+Last Name
+Bus Rider (Yes/No)
+After-school Days (Mon-Fri)
+Authorized Adults
+
+Adult ID (Primary Key)
+First Name
+Last Name
+Relationship to Student (Parent, Guardian, Nanny, etc.)
+Pickup Days (Mon-Fri)
+Organizations
+
+Organization ID (Primary Key)
+Organization Name
+Pickup Days (Mon-Fri)
+Student Pickup Records
+
+Record ID (Primary Key)
+Student ID (Foreign Key)
+Pickup Date
+Pickup Type (Adult/Organization/Bus)
+Adult ID (if applicable)
+Organization ID (if applicable)
+2. Relational Model Design
+After defining the logical model, we'll create a relational model by adding relationships and foreign keys:
+
+STUDENTS (Student_ID is PK)
+AUTHORIZED_ADULTS (Adult_ID is PK)
+ORGANIZATIONS (Org_ID is PK)
+STUDENT_PICKUP (Record_ID is PK, with Student_ID as FK)
+STUDENT_ADULT_RELATION (Mapping Table for Many-to-Many relationship)
+STUDENT_ORG_RELATION (Mapping Table for Many-to-Many relationship)
+3. DDL (Data Definition Language)
+We'll generate SQL statements to create tables based on our relational model.
+
+4. DML (Data Manipulation Language)
+We'll write INSERT statements to populate the database with sample data.
+
+5. Queries
+We'll write simple queries to answer the required questions:
+
+Query 1: What organizations can pick up students?
+
+sql
+Copy
+Edit
+SELECT DISTINCT o.Organization_Name
+FROM ORGANIZATIONS o
+JOIN STUDENT_ORG_RELATION sor ON o.Org_ID = sor.Org_ID;
+Query 2: What students are in after-school activities on a given day?
+
+sql
+Copy
+Edit
+SELECT First_Name, Last_Name
+FROM STUDENTS
+WHERE After_School_Days LIKE '%Monday%'; -- Change day as needed
+Query 3: Who is picking up a student on a given day?
+
+sql
+Copy
+Edit
+SELECT s.First_Name, s.Last_Name, a.First_Name AS Adult_First, a.Last_Name AS Adult_Last, o.Organization_Name, sp.Pickup_Date
+FROM STUDENT_PICKUP sp
+LEFT JOIN STUDENTS s ON sp.Student_ID = s.Student_ID
+LEFT JOIN AUTHORIZED_ADULTS a ON sp.Adult_ID = a.Adult_ID
+LEFT JOIN ORGANIZATIONS o ON sp.Org_ID = o.Org_ID
+WHERE sp.Pickup_Date = TO_DATE('2025-02-07', 'YYYY-MM-DD');
+6. Indexing
+We'll add indexes on foreign keys and commonly searched fields to optimize performance.
+
+sql
+Copy
+Edit
+CREATE INDEX idx_student_id ON STUDENT_PICKUP(Student_ID);
+CREATE INDEX idx_adult_id ON STUDENT_PICKUP(Adult_ID);
+CREATE INDEX idx_org_id ON STUDENT_PICKUP(Org_ID);
+7. Execution Plan
+Using EXPLAIN PLAN FOR to analyze queries.
+
+8. Modifications & Optimizations
+We can modify indexes, queries, and relationships based on test results.
+
+Final Deliverables
+Annotated PowerPoint Presentation (Summary of database design)
+Text Files for Queries & DDL Statements:
+Queries_Individual_Project.txt
+DDL_Individual_Project.txt
+Database Design Files (Design_Individual_Project.zip)
